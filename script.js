@@ -1,11 +1,11 @@
 // Editable sections with durations for green, red, and grey
 const sections = [
-  { type: 'green', duration: 1500 }, // Green section for left key (in ms)
-  { type: 'grey', duration: 1000 },  // Grey section (no key press)
-  { type: 'red', duration: 1200 },   // Red section for right key
-  { type: 'green', duration: 1300 }, // Green section for left key
-  { type: 'grey', duration: 800 },  // Grey section (no key press)
-  { type: 'red', duration: 1000 },   // Red section for right key
+  { type: 'green', duration: 15000 }, // Green section for left key (in ms)
+  { type: 'grey', duration: 10000 },  // Grey section (no key press)
+  { type: 'red', duration: 12000 },   // Red section for right key
+  { type: 'green', duration: 13000 }, // Green section for left key
+  { type: 'grey', duration: 8000 },  // Grey section (no key press)
+  { type: 'red', duration: 10000 },   // Red section for right key
 ];
 
 let currentIndex = 0;
