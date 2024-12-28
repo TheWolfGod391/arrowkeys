@@ -23,18 +23,21 @@ body {
   color: red;
 }
 
-/* Progress bar */
+/* Progress Bar Styling */
 #progress-container {
-  width: 100%;
-  background-color: #ddd;
-  height: 20px;
-  margin: 20px 0;
+  width: 100%;             /* Full width of the container */
+  background-color: #ddd;  /* Light gray background */
+  height: 20px;            /* Height of the progress bar */
+  border-radius: 10px;     /* Rounded corners */
+  overflow: hidden;        /* Prevent inner bar from overflowing */
+  margin: 20px 0;          /* Space around the progress bar */
 }
 
 #progress-bar {
-  width: 0;
-  height: 100%;
-  background-color: green;
+  width: 0%;               /* Start at 0% progress */
+  height: 100%;            /* Full height of the container */
+  background-color: #4caf50; /* Green color */
+  transition: width 0.2s;  /* Smooth transition effect */
 }
 
 /* Button styling */
