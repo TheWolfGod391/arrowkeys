@@ -1,68 +1,67 @@
-const sequence = [
-  { key: "ArrowLeft", time: 1500 },
-  { key: "ArrowRight", time: 2000 },
-  { key: "ArrowLeft", time: 1000 },
+// Editable sections with durations for green and red
+const sections = [
+  { type: 'green', duration: 1500 }, // Green section for left key (in ms)
+  { type: 'red', duration: 1000 },   // Red section for right key (in ms)
+  { type: 'green', duration: 1200 }, // Another green section for left key
+  { type: 'red', duration: 1300 },   // Another red section for right key
 ];
 
 let currentIndex = 0;
 let startTime = null;
+let missedBy = 0;
+let currentDuration = 0;
 
-// DOM elements
+// DOM Elements
+const movingBar = document.getElementById("moving-bar");
 const resultsDiv = document.getElementById("results");
-const sequenceDiv = document.getElementById("sequence");
-const progressBar = document.getElementById("progress-bar");
 
-// Function to show the sequence
-function showSequence() {
-  sequenceDiv.innerHTML = sequence
-    .map((item, index) => 
-      `<span ${index === currentIndex ? 'style="font-weight:bold;"' : ''}>
-         ${item.key} (${item.time / 1000}s)
-       </span>`
-    ).join(" ➔ ");
+// Function to update the moving bar's position and color
+function updateMovingBar() {
+  const section = sections[currentIndex];
+  movingBar.style.width = '100%'; // Move bar across the container
+  movingBar.style.transition = `width ${section.duration}ms linear`; // Duration for each section
+  
+  // Change color based on section type (green or red)
+  movingBar.style.backgroundColor = section.type === 'green' ? 'green' : 'red';
 }
 
-// Function to update the progress bar
-function updateProgressBar() {
-  const progressPercent = ((currentIndex + 1) / sequence.length) * 100;
-  progressBar.style.width = `${progressPercent}%`; // Adjust width
-}
-
-// Function to check the timing of key presses
-function checkTiming(key, duration) {
-  const target = sequence[currentIndex];
-  if (key === target.key) {
-    const accuracy = Math.abs(duration - target.time);
-    resultsDiv.innerHTML += `<div class="result">Pressed ${key}: ${duration}ms (accuracy: ±${accuracy}ms)</div>`;
-    currentIndex++;
-    updateProgressBar(); // Update the progress bar when progressing
-    if (currentIndex < sequence.length) {
-      startTime = performance.now(); // Reset start time for the next key
-    } else {
-      resultsDiv.innerHTML += `<div class="result">Sequence Complete!</div>`;
-    }
-  } else {
-    resultsDiv.innerHTML += `<div class="missed">Wrong key: ${key}</div>`;
-  }
-}
-
-// Keydown event listener
-window.addEventListener("keydown", (event) => {
-  if (currentIndex < sequence.length && startTime !== null) {
+// Function to handle key presses and timing feedback
+function handleKeyPress(event) {
+  if (currentIndex < sections.length && startTime !== null) {
+    const section = sections[currentIndex];
     const duration = performance.now() - startTime;
-    checkTiming(event.key, duration);
-    startTime = performance.now(); // Reset start time for the next key
+
+    // Check if the key pressed matches the section type
+    if ((section.type === 'green' && event.key === 'ArrowLeft') || (section.type === 'red' && event.key === 'ArrowRight')) {
+      const accuracy = Math.abs(duration - section.duration);
+      missedBy = accuracy;
+      resultsDiv.innerHTML = `You missed by ${missedBy.toFixed(2)} ms.`;
+    } else {
+      missedBy = Math.abs(duration - section.duration);
+      resultsDiv.innerHTML = `Wrong key! Missed by ${missedBy.toFixed(2)} ms.`;
+    }
+
+    // Move to the next section or finish the game
+    currentIndex++;
+    if (currentIndex < sections.length) {
+      startTime = performance.now();
+      updateMovingBar();
+    } else {
+      resultsDiv.innerHTML += "<br>Game Over!";
+    }
   }
-});
+}
 
 // Function to start the game
 function startGame() {
-  resultsDiv.innerHTML = "";
   currentIndex = 0;
+  missedBy = 0;
   startTime = performance.now();
-  progressBar.style.width = "0%"; // Reset progress bar
-  showSequence();
+  updateMovingBar();
 }
 
-// Start the game
+// Event listener for key presses
+window.addEventListener("keydown", handleKeyPress);
+
+// Start the game immediately
 startGame();
