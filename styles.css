@@ -4,6 +4,7 @@
   height: 200px;
   position: relative;
   margin-top: 50px;
+  font-family: Arial, sans-serif;
 }
 
 /* Moving bar container */
@@ -12,25 +13,49 @@
   height: 40px;
   position: absolute;
   top: 80px;
-  background-color: #ddd; /* Light background for bar */
+  background-color: #ddd;
   overflow: hidden;
   border-radius: 10px;
+  margin: auto;
+  display: flex;
 }
 
 /* The moving bar */
 #moving-bar {
   height: 100%;
-  width: 0%; /* Starts at 0% */
   position: absolute;
   top: 0;
-  background-color: green; /* Default green color */
-  transition: width 0.1s linear;
+  display: flex;
+  transition: transform 0.1s linear;
+}
+
+/* Section colors */
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}
+
+.grey {
+  background-color: grey;
+}
+
+/* Triangle indicator */
+#indicator {
+  position: absolute;
+  left: 10px;
+  top: 30px;
+  color: black;
+  font-size: 24px;
+  z-index: 2;
+  user-select: none;
 }
 
 /* Results section */
 #results {
   margin-top: 20px;
-  font-family: Arial, sans-serif;
   font-size: 18px;
   color: #333;
 }
