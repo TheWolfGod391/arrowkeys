@@ -93,9 +93,30 @@ function startGame() {
   updateMovingBar();
   moveIndicator();
 }
+// Function to reset the game
+function resetGame() {
+  currentIndex = 0;      // Reset to the first section
+  missedBy = 0;          // Clear the missed by value
+  startTime = performance.now();  // Restart the timer
+  updateMovingBar();     // Re-render the moving bar
+  moveIndicator();       // Reset the indicator to the start
+  resultsDiv.innerHTML = ''; // Clear previous results
+}
 
-// Event listener for key presses
-window.addEventListener("keydown", handleKeyPress);
+// Combined keydown event listener
+window.addEventListener("keydown", (event) => {
+  // Reset the game when the "R" key is pressed (either uppercase or lowercase)
+  if (event.key.toLowerCase() === 'r') {
+    resetGame();  // Call the reset function
+  } else {
+    // Handle key presses for game (i.e., detecting if the player presses the correct key)
+    if (currentIndex < sections.length && startTime !== null) {
+      moveIndicator(); // Update the indicator position
+      handleKeyPress(event); // Continue normal game handling
+    }
+  }
+});
+
 
 // Start the game immediately
 startGame();
