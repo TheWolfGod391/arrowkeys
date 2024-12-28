@@ -42,35 +42,36 @@ function getTotalDuration() {
   return sections.reduce((total, section) => total + section.duration, 0);
 }
 
-// Function to move the indicator and check key presses
 function moveIndicator() {
-  const totalDuration = getTotalDuration();
+  const totalDuration = getTotalDuration(); // Total duration of all sections
   const section = sections[currentIndex];
 
-  // Move the indicator across the bar
+  // Calculate how much the indicator moves for this section
   const containerWidth = document.getElementById("moving-bar-container").clientWidth;
   const indicatorPosition = (section.duration / totalDuration) * containerWidth;
+
+  // Add delay to the movement speed, e.g., multiply duration by 1.5 to slow it down
+  indicator.style.transition = `left ${(section.duration * 1.5) / 1000}s linear`; // Slow down by increasing time
   indicator.style.left = `${indicatorPosition}px`;
 
-  // Check if the key is pressed at the right time
   const currentTime = performance.now() - startTime;
-  if ((section.type === 'green' && currentTime >= section.duration) || 
-      (section.type === 'red' && currentTime >= section.duration) ||
-      (section.type === 'grey' && currentTime >= section.duration)) {
+
+  // Check if it's time to move to the next section based on current time
+  if (currentTime >= section.duration) {
     if ((section.type === 'green' && event.key === 'ArrowLeft') ||
         (section.type === 'red' && event.key === 'ArrowRight') ||
         (section.type === 'grey' && !event.key)) {
-      // Add timing feedback
+      // Provide timing feedback
       const accuracy = Math.abs(currentTime - section.duration);
       missedBy = accuracy;
       resultsDiv.innerHTML = `You missed by ${missedBy.toFixed(2)} ms.`;
     }
 
-    // Move to next section or finish
+    // Move to the next section or finish
     currentIndex++;
     if (currentIndex < sections.length) {
       startTime = performance.now();
-      moveIndicator();
+      moveIndicator();  // Continue with the next section
     } else {
       resultsDiv.innerHTML += "<br>Game Over!";
     }
